@@ -1,4 +1,5 @@
 import { curriculum as stageAcademy } from './curriculum';
+import { kataCurriculum } from './kataCurriculum';
 
 export const paths = [
   {
@@ -14,6 +15,13 @@ export const paths = [
     description: 'Develop the philosophical foundations of success. Learn mental frameworks for resilience and growth.',
     phases: [],
     status: 'coming_soon'
+  },
+  {
+    id: 'kata-series',
+    title: 'The Kata Series',
+    description: 'Deep-dive mental models on attempting hard things, reading human competence, and avoiding the trap of being average.',
+    phases: kataCurriculum,
+    status: 'active'
   },
   {
     id: 'charismatic-leadership',
