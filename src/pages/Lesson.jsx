@@ -77,6 +77,17 @@ export default function Lesson({ isLessonComplete, toggleLesson }) {
             {block.author && <footer className="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-widest">— {block.author}</footer>}
           </blockquote>
         );
+      case 'image':
+        return (
+          <div key={i} className="my-12">
+            <div className="overflow-hidden rounded-2xl border border-white/10 glass-bright flex justify-center">
+              <img src={block.url} alt={block.alt || block.caption || 'Lesson visual'} className="w-full h-auto object-cover" />
+            </div>
+            {block.caption && (
+              <p className="mt-4 text-center text-[13px] text-[#8E8E93] tracking-wide">{block.caption}</p>
+            )}
+          </div>
+        );
       default:
         return null;
     }

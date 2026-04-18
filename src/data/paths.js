@@ -1,5 +1,6 @@
 import { curriculum as stageAcademy } from './curriculum';
 import { kataCurriculum } from './kataCurriculum';
+import { comedyCurriculum } from './comedyCurriculum';
 
 export const paths = [
   {
@@ -24,10 +25,10 @@ export const paths = [
     status: 'active'
   },
   {
-    id: 'charismatic-leadership',
-    title: 'Charismatic Leadership',
-    description: 'Learn how to lead with conviction, build deep rapport, and command the room.',
-    phases: [],
-    status: 'coming_soon'
+    id: 'understanding-comedy',
+    title: 'Understanding Comedy',
+    description: 'Deconstruct the science and math behind stand-up comedy. Learn joke writing, character building, and the mechanics of making people laugh.',
+    phases: comedyCurriculum,
+    status: 'active'
   }
 ];
