@@ -1,17 +1,51 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { paths } from '../data/paths';
+import { usePathData } from '../hooks/usePathData';
 import { useEffect } from 'react';
 
 export default function Lesson({ isLessonComplete, toggleLesson }) {
   const { pathId, phaseSlug, lessonSlug } = useParams();
   const navigate = useNavigate();
+  const { path: currentPath, loading, error } = usePathData(pathId);
 
-  const currentPath = paths.find(p => p.id === pathId);
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [lessonSlug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-24 px-6 flex items-center justify-center bg-black">
+        <motion.div
+          className="flex flex-col items-center gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+          <p className="text-[#8E8E93] text-sm">Loading lesson...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (error || !currentPath) {
+    return (
+      <div className="min-h-screen pt-24 px-6 flex items-center justify-center bg-black">
+        <div className="text-center">
+          <h1 className="text-xl font-semibold text-white mb-3">Path not found</h1>
+          <p className="text-[#8E8E93] mb-6 text-sm">{error || 'This path does not exist.'}</p>
+          <Link to="/" className="text-sm font-medium text-white hover:text-[#AEAEB2] transition-colors">
+            ← Back to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const phaseIndex = currentPath?.phases?.findIndex(p => p.slug === phaseSlug) ?? -1;
   const phase = phaseIndex > -1 ? currentPath.phases[phaseIndex] : null;
   
-  if (!currentPath || !phase) {
+  if (!phase) {
     return <div className="min-h-screen pt-24 text-center text-[#8E8E93] bg-black">Phase not found</div>;
   }
 
@@ -23,11 +57,6 @@ export default function Lesson({ isLessonComplete, toggleLesson }) {
   }
 
   const isCompleted = isLessonComplete(lesson.id);
-
-  // Scroll to top on mount
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [lessonSlug]);
 
   const nextLesson = phase.lessons[lessonIndex + 1];
   const prevLesson = phase.lessons[lessonIndex - 1];
@@ -52,9 +81,10 @@ export default function Lesson({ isLessonComplete, toggleLesson }) {
           <p key={i} className="text-[17px] text-[#AEAEB2] leading-[1.6] font-light mb-6 tracking-tight" dangerouslySetInnerHTML={{ __html: block.text.replace(/\*\*(.*?)\*\*/g, '<span class="text-white font-medium">$1</span>') }} />
         );
       case 'list':
+      case 'bullets':
         return (
           <ul key={i} className="space-y-4 mb-10 pl-2">
-            {block.items.map((item, j) => (
+            {(block.items || []).map((item, j) => (
               <li key={j} className="flex items-start gap-4 text-[17px] text-[#AEAEB2] font-light tracking-tight">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#8E8E93] mt-2.5 shrink-0" />
                 <span className="leading-[1.6]" dangerouslySetInnerHTML={{ __html: item.replace(/\*\*(.*?)\*\*/g, '<span class="text-white font-medium">$1</span>') }} />
@@ -63,9 +93,10 @@ export default function Lesson({ isLessonComplete, toggleLesson }) {
           </ul>
         );
       case 'callout':
+      case 'warning':
         return (
           <div key={i} className={`p-6 rounded-2xl bg-[rgba(28,28,30,0.5)] border border-white/5 my-10 pl-6 border-l-2 ${
-            block.variant === 'warning' ? 'border-l-[#ff3b30]' : block.variant === 'important' ? 'border-l-[#ff9f0a]' : 'border-l-[#0a84ff]'
+            block.variant === 'warning' || block.type === 'warning' ? 'border-l-[#ff3b30]' : block.variant === 'important' ? 'border-l-[#ff9f0a]' : 'border-l-[#0a84ff]'
           }`}>
             <p className="text-[15px] font-medium text-[#D1D1D6] leading-relaxed tracking-tight">{block.text}</p>
           </div>

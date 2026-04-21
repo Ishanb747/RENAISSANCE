@@ -1,0 +1,67 @@
+{
+  "_comment": "Add these statements to the lambdaexecutionpolicy Statement array in courseGenerator-cloudformation-template.json",
+  "iam_policy_statements": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel"
+      ],
+      "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "textract:DetectDocumentText"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": {
+        "Fn::Sub": "arn:aws:s3:::${storage_renaissance_bucket_name}/*"
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:GetItem",
+        "dynamodb:Scan"
+      ],
+      "Resource": {
+        "Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/GeneratedPaths"
+      }
+    }
+  ],
+  "dynamodb_table_resource": {
+    "GeneratedPathsTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "GeneratedPaths",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "pathId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "pathId",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    }
+  },
+  "lambda_config_overrides": {
+    "Timeout": 120,
+    "MemorySize": 512
+  },
+  "environment_variable_to_add": {
+    "DYNAMODB_TABLE_NAME": "GeneratedPaths"
+  }
+}

@@ -1,28 +1,43 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { paths } from '../data/paths';
+import { usePathData } from '../hooks/usePathData';
 import PhaseCard from '../components/PhaseCard';
 
 export default function Curriculum({ getPhaseProgress, getOverallProgress }) {
   const { pathId } = useParams();
-  const currentPath = paths.find(p => p.id === pathId);
+  const { path: currentPath, loading, error } = usePathData(pathId);
 
-  if (!currentPath) {
+  if (loading) {
     return (
-      <div className="min-h-screen pt-24 px-6 flex items-center justify-center bg-black text-[#8E8E93]">
-        Path not found
+      <div className="min-h-screen pt-24 px-6 flex items-center justify-center bg-black">
+        <motion.div
+          className="flex flex-col items-center gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+          <p className="text-[#8E8E93] text-sm">Loading curriculum...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (error || !currentPath) {
+    return (
+      <div className="min-h-screen pt-24 px-6 flex items-center justify-center bg-black">
+        <div className="text-center">
+          <h1 className="text-xl font-semibold text-white mb-3">Path not found</h1>
+          <p className="text-[#8E8E93] mb-6 text-sm">{error || 'This learning path does not exist.'}</p>
+          <Link to="/" className="text-sm font-medium text-white hover:text-[#AEAEB2] transition-colors">
+            ← Back to Home
+          </Link>
+        </div>
       </div>
     );
   }
 
   const { phases } = currentPath;
-  const totalLessons = phases.reduce((acc, p) => acc + p.lessons.length, 0);
   const overallProgress = getOverallProgress(phases);
-  // Re-calculate the total completed specific to this path
-  const completedLessons = phases.reduce((acc, p) => 
-    acc + p.lessons.filter(l => getPhaseProgress(p) > 0).length, 0); 
-  // Wait, `getOverallProgress` from the hook uses global logic. But overall progress should adapt correctly. 
-  // We'll rely on getOverallProgress for now.
 
   return (
     <div className="min-h-screen pt-24 pb-20 px-6 sm:px-12 bg-black">
@@ -46,6 +61,15 @@ export default function Curriculum({ getPhaseProgress, getOverallProgress }) {
           <p className="text-[#8E8E93] text-lg max-w-2xl font-light leading-relaxed mb-8">
             {currentPath.description}
           </p>
+
+          {currentPath.isGenerated && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(10,132,255,0.1)] border border-[#0A84FF]/20 mb-8">
+              <svg className="w-3.5 h-3.5 text-[#0A84FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span className="text-[12px] font-semibold text-[#0A84FF] tracking-wide">AI Generated</span>
+            </div>
+          )}
 
           <div className="glass rounded-2xl p-6 border border-white/5">
             <div className="flex items-center justify-between mb-4">
@@ -79,7 +103,6 @@ export default function Curriculum({ getPhaseProgress, getOverallProgress }) {
                   }}
                 />
 
-                {/* We pass pathId to PhaseCard implicitly or update PhaseCard to accept it */}
                 <PhaseCard
                   phase={phase}
                   progress={getPhaseProgress(phase)}

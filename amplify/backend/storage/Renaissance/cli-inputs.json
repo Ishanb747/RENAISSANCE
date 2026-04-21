@@ -1,0 +1,16 @@
+{
+  "resourceName": "Renaissance",
+  "policyUUID": "57b16c41",
+  "bucketName": "renaissancec254c6e3e96f49d28a973c2a292b4103",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

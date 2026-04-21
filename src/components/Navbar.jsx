@@ -8,6 +8,8 @@ export default function Navbar() {
 
   const links = [
     { to: '/', label: 'Overview' },
+    { to: '/explore', label: 'Explore' },
+    { to: '/generate', label: 'Generate' },
   ];
 
   return (

@@ -1,0 +1,38 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-renaissance-dev-0b61a-authRole",
+      "UnauthRoleArn": "arn:aws:iam::578377797968:role/amplify-renaissance-dev-0b61a-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::578377797968:role/amplify-renaissance-dev-0b61a-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-renaissance-dev-0b61a-deployment",
+      "UnauthRoleName": "amplify-renaissance-dev-0b61a-unauthRole",
+      "StackName": "amplify-renaissance-dev-0b61a",
+      "StackId": "arn:aws:cloudformation:ap-south-1:578377797968:stack/amplify-renaissance-dev-0b61a/c14ed4e0-3be3-11f1-8052-02c000606107",
+      "AmplifyAppId": "d2v112lb2l66cc"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2v112lb2l66cc",
+          "type": "manual"
+        }
+      },
+      "auth": {
+        "renaissance6cabb01b": {}
+      },
+      "storage": {
+        "Renaissance": {}
+      },
+      "function": {
+        "courseGenerator": {
+          "deploymentBucketName": "amplify-renaissance-dev-0b61a-deployment",
+          "s3Key": "amplify-builds/courseGenerator-4b473634633571563844-build.zip"
+        }
+      },
+      "api": {
+        "stageacademyapi": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "paths": {
+    "/generate": {
+      "name": "/generate",
+      "lambdaFunction": "courseGenerator",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/paths/{pathId}": {
+      "name": "/paths/{pathId}",
+      "lambdaFunction": "courseGenerator",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/allpaths": {
+      "name": "/allpaths",
+      "lambdaFunction": "courseGenerator",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

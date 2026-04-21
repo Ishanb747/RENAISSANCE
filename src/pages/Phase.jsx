@@ -1,20 +1,38 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { paths } from '../data/paths';
+import { usePathData } from '../hooks/usePathData';
 
 export default function Phase({ isLessonComplete, isExerciseComplete, toggleLesson, toggleExercise, getPhaseProgress }) {
   const { pathId, phaseSlug } = useParams();
-  
-  const currentPath = paths.find(p => p.id === pathId);
+  const { path: currentPath, loading, error } = usePathData(pathId);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-24 px-6 flex items-center justify-center bg-black">
+        <motion.div
+          className="flex flex-col items-center gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+          <p className="text-[#8E8E93] text-sm">Loading phase...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   const phaseIndex = currentPath?.phases?.findIndex(p => p.slug === phaseSlug) ?? -1;
   const phase = phaseIndex > -1 ? currentPath.phases[phaseIndex] : null;
 
-  if (!currentPath || !phase) {
+  if (error || !currentPath || !phase) {
     return (
       <div className="min-h-screen pt-24 px-6 flex items-center justify-center bg-black">
         <div className="text-center">
-          <h1 className="text-xl text-white mb-4">Phase not found in this curriculum path</h1>
-          <Link to={`/path/${pathId || 'stage-academy'}`} className="text-[#8E8E93] hover:text-white">Back</Link>
+          <h1 className="text-xl font-semibold text-white mb-3">Phase not found</h1>
+          <p className="text-[#8E8E93] mb-6 text-sm">{error || 'This phase does not exist in this curriculum path.'}</p>
+          <Link to={`/path/${pathId || 'stage-academy'}`} className="text-sm font-medium text-white hover:text-[#AEAEB2] transition-colors">
+            ← Back to Path
+          </Link>
         </div>
       </div>
     );

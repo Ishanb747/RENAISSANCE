@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import Curriculum from './pages/Curriculum';
 import Phase from './pages/Phase';
 import Lesson from './pages/Lesson';
+import Generate from './pages/Generate';
+import Explore from './pages/Explore';
 import { useProgress } from './hooks/useProgress';
 
 export default function App() {
@@ -28,6 +30,18 @@ export default function App() {
             path="/" 
             element={
               <Home />
+            } 
+          />
+          <Route 
+            path="/generate" 
+            element={
+              <Generate />
+            } 
+          />
+          <Route 
+            path="/explore" 
+            element={
+              <Explore />
             } 
           />
           <Route 
